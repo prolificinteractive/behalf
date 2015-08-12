@@ -198,9 +198,11 @@ describe('Session', function () {
 
     describe('#requestJsonSecure', function () {
       it('has same behavior as #requestJson but uses https protocol', function () {
-        var session = behalf.createSession();
+        var session = behalf.createSession({
+          host: TEST_HOST
+        });
 
-        session._request = function (protocol) {
+        session._request = function (protocol, options) {
           return Promise.resolve({
             body: '{"protocol":"'+protocol+'"}'
           });
