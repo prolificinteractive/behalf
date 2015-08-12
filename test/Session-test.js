@@ -163,6 +163,58 @@ describe('Session', function () {
       });
     });
 
+    describe('#requestJson', function () {
+      var session;
+
+      beforeEach(function () {
+        session = behalf.createSession({
+          host: TEST_HOST
+        });
+
+        app.get(PATHNAME, function (req, resp) {
+          resp.send({
+            foo: 'bar',
+            contentType: req.headers['content-type']
+          });
+        });
+      });
+
+      it('adds a .json key with parsed JSON object to response', function () {
+        return session
+          .requestJson(PATHNAME)
+          .tap(function (response) {
+            response.json.foo.should.equal('bar');
+          });
+      });
+
+      it('sets application/json as Content-Type', function () {
+        return session
+          .requestJson(PATHNAME)
+          .tap(function (response) {
+            response.json.contentType.should.equal('application/json');
+          });
+      });
+    });
+
+    describe('#requestJsonSecure', function () {
+      it('has same behavior as #requestJson but uses https protocol', function () {
+        var session = behalf.createSession();
+
+        session._request = function (protocol) {
+          return Promise.resolve({
+            body: '{"protocol":"'+protocol+'"}'
+          });
+        };
+
+        return session
+          .requestJsonSecure('/')
+          .get('json')
+          .tap(function (json) {
+            json.protocol.should.equal('https');
+          });
+      });
+    });
+
     describe('redirects', function () {
       it('follows redirects and consumes cookies along the way', function () {
         var session = behalf.createSession({

@@ -66,6 +66,14 @@ By default, Behalf will manually follow redirects so that it can consume any coo
 
 Same as `session.request`, except using `https` protocol.
 
+### `session.requestJson(requestOptions, [callback]) -> responsePromise`
+
+Sets the `Content-Type` header to "application/json" and adds a `json` key to the response object, which contains the parsed body.
+
+### `session.requestJsonSecure(requestOptions, [callback]) -> responsePromise`
+
+Same as `session.requestJson` but with HTTPS as the protocol.
+
 ### `session.export() -> { id: String, cookieIndex: Object }`
 
 Returns an object containing the session's `id` and index of cookies. Useful for serializing and persisting to a database.
