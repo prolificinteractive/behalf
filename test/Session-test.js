@@ -26,7 +26,10 @@ function getCookieVal (session, name) {
 describe('Session', function () {
   describe('#export', function () {
     it('creates a plain object of the session', function () {
-      var session = behalf.createSession();
+      var session = behalf.createSession({
+        host: TEST_HOST,
+        userAgent: 'Behalf'
+      });
       var exportObj = session.export();
       var idxJson;
 
