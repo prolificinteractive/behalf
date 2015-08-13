@@ -24,38 +24,16 @@ function getCookieVal (session, name) {
 }
 
 describe('Session', function () {
-  describe('#export', function () {
-    it('creates a plain object of the session', function () {
-      var session = behalf.createSession({
-        host: TEST_HOST,
-        userAgent: 'Behalf'
-      });
-      var exportObj = session.export();
-      var idxJson;
-
-      session.jar.setCookie('foo=bar', 'http://localhost:' + TEST_PORT);
-
-      idxJson = JSON.stringify(session.jar._jar.store.idx);
-
-      exportObj.id.should.equal(session.id);
-      JSON.stringify(exportObj.cookieIndex).should.equal(idxJson);
-    });
-  });
-
-  describe('.import', function () {
-    it('creates a session object from an export object', function () {
+  describe('.import and #export', function () {
+    it('can serialize and deserialize a session', function () {
       var session = behalf.createSession();
 
       session.jar.setCookie('foo=bar', 'http://localhost:' + TEST_PORT);
 
       behalf.Session
         .import(session.export())
-        .export()
-        .cookieIndex
-        .localhost['/']
-        .foo
-        .value
-        .should.equal('bar');
+        .jar._jar.store.idx
+        .localhost['/'].foo.value.should.equal('bar');
     });
   });
 
