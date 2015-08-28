@@ -188,7 +188,7 @@ MyStore.prototype.save = function (session, ttl) {
       }
     })
     .then(function () {
-      return messageQueue.push('destroySession', { id: session.id });
+      return messageQueue.push('destroySession', { id: session.id }, ttl);
     })
     .return();
 }
