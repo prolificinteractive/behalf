@@ -15,6 +15,7 @@
   "dependencies": {
     "bluebird": "^2.9.25",
     "lodash": "^3.10.1",
+    "redis": "^0.12.1",
     "request": "^2.55.0",
     "uuid": "^2.0.1"
   },

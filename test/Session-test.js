@@ -3,7 +3,6 @@ var should = require('should');
 var _ = require('lodash');
 var express = require('express');
 var Promise = require('bluebird');
-var callbackify = require('../lib/callbackify');
 var behalf = require('../lib/behalf');
 var TEST_PORT = 10088;
 var PATHNAME = '/';
@@ -11,29 +10,16 @@ var TEST_HOST = 'localhost:' + TEST_PORT;
 var BASE_URL = 'http://' + TEST_HOST;
 var BASE_URL_SECURE = 'https://' + TEST_HOST;
 
-function getCookieVal (session, name) {
-  return new Promise(function (resolve, reject) {
-    session.jar._jar.store.findCookie('localhost', '/', name, function (err, cookie) {
-      if (err) {
-        return reject(err);
-      }
-
-      resolve(cookie.value);
-    });
-  });
-}
-
 describe('Session', function () {
   describe('.import and #export', function () {
     it('can serialize and deserialize a session', function () {
       var session = behalf.createSession();
 
-      session.jar.setCookie('foo=bar', 'http://localhost:' + TEST_PORT);
+      session.setCookie('foo', 'bar', 'http://localhost:' + TEST_PORT);
 
       behalf.Session
         .import(session.export())
-        .jar._jar.store.idx
-        .localhost['/'].foo.value.should.equal('bar');
+        .getCookie('foo').value.should.equal('bar');
     });
   });
 
@@ -58,7 +44,7 @@ describe('Session', function () {
           resp.send(req.headers.cookie);
         });
 
-        session.jar.setCookie('foo=bar', 'http://localhost:' + TEST_PORT);
+        session.setCookie('foo', 'bar', 'http://localhost:' + TEST_PORT);
 
         return session
           .request({
@@ -115,18 +101,15 @@ describe('Session', function () {
           resp.cookie('foo', 'bar').send('');
         });
 
-        session.jar.setCookie('foo=bar', 'http://localhost:' + TEST_PORT);
+        session.setCookie('foo', 'bar', 'http://localhost:' + TEST_PORT);
 
         return session
           .request({
             baseUrl: BASE_URL,
             uri: PATHNAME
           })
-          .then(function (response) {
-            return getCookieVal(session, 'foo');
-          })
           .tap(function (val) {
-            val.should.equal('bar');
+            session.getCookie('foo').value.should.equal('bar');
           });
       });
     });
@@ -236,16 +219,12 @@ describe('Session', function () {
 
         return session
           .request('/1')
-          .then(function () {
-            return Promise
-              .props(_.mapValues(vals, function (v, k) {
-                return getCookieVal(session, k);
-              }))
-              .tap(function (result) {
-                _.each(vals, function (v, k) {
-                  result[k].should.equal(v);
-                });
-              });
+          .tap(function () {
+            var cookies = session.getCookies();
+
+            _.each(vals, function (v, k) {
+              cookies[k].value.should.equal(v);
+            });
           });
       });
     });
