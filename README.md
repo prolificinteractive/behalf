@@ -98,6 +98,7 @@ This middleware extracts a session key from the request, then loads a session. E
 ```javascript
 var sessions = new behalf.middleware.sessionManager(
   store: new behalf.stores.Redis(),
+  ttl: 3600000, //1 hour
   getKey: function (req) {
     return req.headers['session-key'];
   }
@@ -108,6 +109,7 @@ app.use(sessions);
 
 Options:
  - `store` - An instance of a session store. Behalf comes with two: `behalf.stores.Memory` and `behalf.stores.Redis`. See ["Session Stores"](#session-stores) to learn more.
+ - `ttl` - TTL in milliseconds. Defaults to indefinite TTL.
  - `getKey` - A function that extracts and returns the session key from the Express request object.
 
 Now you'll get an object attached to the Express request object under the `behalf` property that contains the session context. It has these properties:

@@ -26,6 +26,7 @@ describe('middleware', function () {
 
     app.use(behalf.middleware.sessionManager({
       store: store,
+      ttl: 1000,
       getKey: function (req) {
         return req.query.sessionId;
       }
@@ -75,6 +76,34 @@ describe('middleware', function () {
             .load(session.id)
             .tap(function (loadedSession) {
               loadedSession.getCookie('foo').value.should.equal('bar');
+            });
+        });
+    });
+
+    it('respects the ttl option', function () {
+      return store
+        .save(session)
+        .then(function () {
+          return session.requestJson({
+            uri: PATHNAME,
+            qs: {
+              sessionId: session.id
+            }
+          });
+        })
+        .then(function (response) {
+          return store
+            .load(session.id)
+            .tap(function (loadedSession) {
+              loadedSession.getCookie('foo').value.should.equal('bar');
+            });
+        })
+        .delay(1500)
+        .then(function () {
+          return store
+            .load(session.id)
+            .tap(function (loadedSession) {
+              (loadedSession === null).should.equal(true);
             });
         });
     });
