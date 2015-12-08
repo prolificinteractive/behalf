@@ -1,6 +1,6 @@
 {
   "name": "behalf",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "Emulate the way browsers make requests and manage cookies.",
   "main": "index.js",
   "scripts": {

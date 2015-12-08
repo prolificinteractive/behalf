@@ -159,7 +159,7 @@ Behalf includes two session stores, one in-memory and one for Redis.
 ### `new behalf.stores.Redis(options)`
 
 Options:
- - `client` - _Optional_. If you want to configure the connection, you can pass your own Redis client instance.
+ - `config` - _Optional_. Redis configuration, passed into the `redis.createClient` constructor.
  - `keyPrefix` - _Optional_. Prepended to every Redis key that sessions are stored against. Default: "sessions:"
 
 ### `new behalf.stores.Memory()`
