@@ -1,6 +1,6 @@
 {
   "name": "behalf",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "description": "Emulate the way browsers make requests and manage cookies.",
   "main": "index.js",
   "scripts": {
@@ -16,7 +16,7 @@
     "bluebird": "^3.0.6",
     "lodash": "^3.10.1",
     "redis": "^2.4.2",
-    "request": "^2.67.0",
+    "request": "2.74.0",
     "uuid": "^2.0.1"
   },
   "devDependencies": {
