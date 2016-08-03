@@ -22,6 +22,9 @@ function suite (store, name) {
 
     it('can save and load a session', function () {
       session.jar.setCookie('foo=bar', 'http://127.0.0.1');
+      session.data = {
+        foo: 'bar'
+      };
 
       return store
         .save(session)
