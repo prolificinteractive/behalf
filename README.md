@@ -1,4 +1,4 @@
-# Behalf
+![Behalf](behalf.jpg)
 
 ## Installation
 
