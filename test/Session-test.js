@@ -227,6 +227,32 @@ describe('Session', function () {
             });
           });
       });
+
+      it('passes the json option when following redirects', function () {
+        var session = behalf.createSession({
+          host: TEST_HOST
+        });
+
+        var redirectionResponse = {
+          test: 'json'
+        };
+
+        app.get('/1', function (req, resp) {
+          resp.redirect('/2');
+        });
+        app.get('/2', function (req, resp) {
+          resp.json(redirectionResponse);
+        });
+
+        return session
+          .request({
+            uri: '/1',
+            json: true
+          })
+          .then(function (response) {
+            (typeof response.body).should.equal('object');
+          });
+      });
     });
   });
 });
